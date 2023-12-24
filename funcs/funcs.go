@@ -7,10 +7,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"gopkg.in/yaml.v2"
 )
 
 const link = "https://jsonplaceholder.typicode.com/users"
@@ -129,10 +132,19 @@ func RetrieveWithId(id int) (structures.User, error) {
 }
 
 func RedisClientInit() {
+	var redisClt redis.Options
+	yamlFile, err := os.ReadFile("redisClient.yaml")
+	if err != nil {
+		log.Fatalf("Error reading YAML file: %v", err)
+	}
+
+	// Parse YAML data into the Config struct
+
+	err = yaml.Unmarshal(yamlFile, &redisClt)
+	if err != nil {
+		log.Fatalf("Error unmarshalling YAML: %v", err)
+	}
+
 	// Initialize Redis client in the init function
-	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379", // Replace with your Redis server address
-		Password: "",               // No password by default
-		DB:       0,                // Default DB
-	})
+	redisClient = redis.NewClient(&redisClt)
 }

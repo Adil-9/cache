@@ -30,6 +30,12 @@ type GeoStruct struct {
 	Lng string `json:"lng"`
 }
 
+type RedisOptions struct {
+	Address  string `yaml:"addr"`
+	Password string `yaml:"password"`
+	DB       int    `yaml:"db"`
+}
+
 //user
 // {
 //     "id": 1,
